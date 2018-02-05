@@ -9,6 +9,7 @@ test_df = pd.read_csv('test.csv')
 
 #1 -----------------------Take a look at data----------------------
 #print train_df.info()
+#print train_df.isnull().sum()
 
 #2 -----------------------Describe the data------------------------
 #print train_df.describe()
@@ -38,3 +39,14 @@ test_df = pd.read_csv('test.csv')
 #plt.show()
 
 #5 --------------------------Manipulation of data-----------------------------------------
+#concatenate both training and test data so that they are manipulated in a single go
+
+data_df = pd.concat((train_df, test_df)) #.reset_index(drop = True) 
+#can be used to reset the index column which if dropped using True, it will be removed from the dataframe
+#print data_df.shape
+
+data_df['Sex'] = data_df['Sex'].map({'female' : 1, 'male' : 0}).astype(int)
+
+print data_df.Embarked.isnull() #prints whether null or not
+print data_df.Embarked.isnull().values # Gives a series of values as false and true i.e. 0 and 1
+print data_df.Embarked.isnull().values.sum() # Gives the sum of 0s and 1s which means sum of all trues
