@@ -47,6 +47,37 @@ data_df = pd.concat((train_df, test_df)) #.reset_index(drop = True)
 
 data_df['Sex'] = data_df['Sex'].map({'female' : 1, 'male' : 0}).astype(int)
 
-print data_df.Embarked.isnull() #prints whether null or not
-print data_df.Embarked.isnull().values # Gives a series of values as false and true i.e. 0 and 1
-print data_df.Embarked.isnull().values.sum() # Gives the sum of 0s and 1s which means sum of all trues
+#print data_df.Embarked.isnull() #prints whether null or not
+#print data_df.Embarked.isnull().values # Gives a series of values as false and true i.e. 0 and 1
+#print data_df.Embarked.isnull().values.sum() # Gives the sum of 0s and 1s which means sum of all trues
+
+#
+freq_port = data_df.Embarked.dropna().mode()[0]
+#dropna drops all the null items 
+#mode return most frequent entry -> 0 S 
+#and [0] is used to access the most frequent entry i.e. S
+
+#Filling the column with most frequent value 
+data_df['Embarked'] = data_df['Embarked'].fillna(freq_port)
+
+#print data_df.Embarked.isnull().values.sum() #Confirms that all null colmns are filled
+#Analysing the filled column
+#print data_df[['Embarked', 'Survived']].groupby(['Embarked'], as_index = False).mean().sort_values(by= 'Survived', ascending= 'False')
+
+#Completemissing entries of Age on the basis of Sex and Pclass
+#finding how many entries of Age are null
+
+#print data_df.Age.isnull().values.sum() #263 null entries
+
+#Guessing ages for each Sex and Passenger
+guess_ages = np.zeros((2,3))
+
+for i in range(0,2):
+	for j in range(0,3):
+			guess_df = data_df[(data_df['Sex'] == i) & (data_df['Pclass'] == j + 1)]['Age'].dropna()
+			age_mean = guess_df.mean()
+			age_std = guess_df.std()
+			age_guess = np.random.normal(age_mean, age_std)
+
+			print age_guess 
+			guess_ages[i,j] = int((age_guess/0.5 + 0.5) * 0.5)
