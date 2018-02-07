@@ -72,6 +72,9 @@ data_df['Embarked'] = data_df['Embarked'].fillna(freq_port)
 #Guessing ages for each Sex and Passenger
 guess_ages = np.zeros((2,3))
 
+#Printing null ages prior to transform
+#print data_df.Age.isnull().sum()
+
 for i in range(0,2):
 	for j in range(0,3):
 			guess_df = data_df[(data_df['Sex'] == i) & (data_df['Pclass'] == j + 1)]['Age'].dropna()
@@ -81,3 +84,19 @@ for i in range(0,2):
 
 			print age_guess 
 			guess_ages[i,j] = int((age_guess/0.5 + 0.5) * 0.5)
+
+for i in range(0,2):
+	for j in range(0, 3):
+			data_df.loc[(data_df.Age.isnull()) & (data_df.Sex == i) & 
+			(data_df.Pclass == j+1), 'Age'] = guess_ages[i,j]
+
+
+data_df['Age'] = data_df['Age'].astype(int)
+
+#Printing number of null ages after the transform 
+#print data_df.Age.isnull().sum()
+
+#Visualising that how data is very scattered
+#grid = sns.FacetGrid(data_df, col = 'Survived')
+#grid.map(plt.scatter,'Age','PassengerId')
+#plt.show()
