@@ -82,7 +82,7 @@ for i in range(0,2):
 			age_std = guess_df.std()
 			age_guess = np.random.normal(age_mean, age_std)
 
-			print age_guess 
+			#print age_guess 
 			guess_ages[i,j] = int((age_guess/0.5 + 0.5) * 0.5)
 
 for i in range(0,2):
@@ -100,3 +100,26 @@ data_df['Age'] = data_df['Age'].astype(int)
 #grid = sns.FacetGrid(data_df, col = 'Survived')
 #grid.map(plt.scatter,'Age','PassengerId')
 #plt.show()
+
+
+#Dividing the data into 5 different data bands
+data_df['AgeBand'] = pd.qcut(data_df['Age'],5)
+
+#print data_df[['AgeBand','Survived']].groupby(['AgeBand'],as_index= False).mean().sort_values(by='AgeBand',ascending=True)
+
+#Now based on the limits shown in the previous output, create 5 different features 
+#print data_df
+
+data_df.loc[data_df['Age'] <= 16 , 'AgeBin'] = 0
+data_df.loc[(data_df['Age'] > 16) & (data_df['Age'] <= 32), 'AgeBin'] = 1
+data_df.loc[(data_df['Age'] > 32) & (data_df['Age'] <= 48), 'AgeBin'] = 2
+data_df.loc[(data_df['Age'] > 48) & (data_df['Age'] <= 64), 'AgeBin'] = 3
+data_df.loc[(data_df['Age'] > 64), 'AgeBin'] = 4
+
+data_df = data_df.drop(['Age'], axis=1)
+
+print data_df.AgeBin.isnull().values.sum()
+
+
+#checkig how many empty values we still have in the new feature 
+
