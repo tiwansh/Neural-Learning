@@ -118,8 +118,26 @@ data_df.loc[(data_df['Age'] > 64), 'AgeBin'] = 4
 
 data_df = data_df.drop(['Age'], axis=1)
 
-print data_df.AgeBin.isnull().values.sum()
-
+#print data_df.AgeBin.isnull().values.sum()
 
 #checkig how many empty values we still have in the new feature 
 
+#complete the fare feature
+#print data_df.Fare.isnull().values.sum() #checking for null values 
+data_df['Fare'].fillna(data_df['Fare'].dropna().median(),inplace = True)
+#print data_df.Fare.isnull().values.sum() #checking for null values
+
+data_df['Fare'] = data_df['Fare'].astype(float)
+data_df['FareBand'] = pd.qcut(data_df['Fare'], 5)
+#print data_df[['Survived','FareBand']].groupby(['FareBand'], as_index = False).mean().sort_values(by = 'FareBand')
+
+#data_df.loc[data_df['Age'] <= 16 , 'AgeBin'] = 0
+data_df.loc[data_df['Fare'] <= 7.9, 'FareBand'] = 0
+data_df.loc[(data_df['Fare'] > 7.9) & (data_df['Fare'] <= 10.5), 'FareBand'] = 1
+data_df.loc[(data_df['Fare'] > 10.5) & (data_df['Fare'] <= 21.558), 'FareBand'] = 2
+data_df.loc[(data_df['Fare'] > 21.558) & (data_df['Fare'] <= 41.579), 'FareBand'] = 3
+data_df.loc[data_df['Fare'] > 41.579, 'FareBand'] = 4
+
+data_df = data_df.drop(['Fare'], axis = 1)
+
+print data_df
