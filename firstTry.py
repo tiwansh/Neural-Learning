@@ -151,3 +151,43 @@ data_df['FareBin'] = data_df['FareBin'].astype(int)
 data_df = data_df.drop(['FareBand'], axis = 1)
 
 #print data_df
+
+#Creating new features#
+#Finding title as a regex => Multiple characters(using +) preceeded by a '.'
+data_df['Title'] = data_df.Name.str.extract('([A-Za-z]+)\.', expand = False)
+
+#Cross tabulating the Survival rate according to the Title
+#print pd.crosstab(data_df['Survived'],data_df['Title'])
+
+#Reducing the number of titles
+
+data_df['Title'] = data_df['Title'].replace(['Capt', 'Col', 'Countess', 'Don', 'Dr', 'Jonkheer', 'Major', 'Rev', 'Sir', 'Lady', 'Dona'], 'Rare')
+
+data_df['Title'] = data_df['Title'].replace(['Mlle'], 'Miss')
+data_df['Title'] = data_df['Title'].replace(['Ms'], 'Miss')
+data_df['Title'] = data_df['Title'].replace(['Mme'], 'Mrs')
+
+#Checking the available titles after modification
+#print data_df[['Title', 'Survived']].groupby(['Title'], as_index = False).mean().sort_values(by = 'Title')
+
+#print data_df.Title.isnull().values.sum()
+
+#Create a new feature Fmimly size#
+data_df['FamilySize'] = data_df['Parch']+ data_df['SibSp'] + 1
+
+#Checking the survival on the basis of FamilySize
+#grid = sns.FacetGrid(data_df, col = 'Survived')
+#grid.map(plt.hist, 'FamilySize')
+#plt.show()
+
+#Creating a new feature isAlone
+data_df['IsAlone'] = 0
+data_df.loc[(data_df['FamilySize'] == 1 ), 'IsAlone'] = 1
+#print data_df[['IsAlone', 'Survived']].groupby(['IsAlone'], as_index = False).mean()
+
+#Creating a new feature AgeBin * PClass
+
+data_df['AgeBin*Pclass'] = data_df.AgeBin * data_df.Pclass
+print data_df.Pclass.unique()
+print data_df.AgeBin.unique()
+print data_df[['AgeBin*Pclass', 'Survived']].groupby(['AgeBin*Pclass'], as_index=False).mean()
