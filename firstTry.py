@@ -9,7 +9,7 @@ test_df = pd.read_csv('test.csv')
 
 #1 -----------------------Take a look at data----------------------
 #print train_df.info()
-#print train_df.isnull().sum()
+#print train_df.isnull().sum()ld
 
 #2 -----------------------Describe the data------------------------
 #print train_df.describe()
@@ -188,6 +188,20 @@ data_df.loc[(data_df['FamilySize'] == 1 ), 'IsAlone'] = 1
 #Creating a new feature AgeBin * PClass
 
 data_df['AgeBin*Pclass'] = data_df.AgeBin * data_df.Pclass
-print data_df.Pclass.unique()
-print data_df.AgeBin.unique()
-print data_df[['AgeBin*Pclass', 'Survived']].groupby(['AgeBin*Pclass'], as_index=False).mean()
+#print data_df.Pclass.unique()
+#print data_df.AgeBin.unique()
+#print data_df[['AgeBin*Pclass', 'Survived']].groupby(['AgeBin*Pclass'], as_index=False).mean()
+
+#Create a new feature - name of the lengh
+data_df['NameLength'] = (data_df['Name'].apply(len))
+#print data_df
+
+#Create a new feature -> HasCabin
+data_df['HasCabin'] = data_df['Cabin'].apply(lambda x: 0 if type(x) == float else 1)
+#print data_df[['HasCabin', 'Survived']].groupby(['HasCabin'], as_index=False).mean()
+
+
+#--------------------------------FEATURE SELECTION----------------------------#
+drop_features = ['PassengerId', 'Name', 'Ticket', 'Cabin','AgeBin', 'AgeBin*Pclass','FareBin']
+data_df = data_df.drop(drop_features, axis = 1)
+print data_df
