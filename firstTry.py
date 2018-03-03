@@ -204,4 +204,22 @@ data_df['HasCabin'] = data_df['Cabin'].apply(lambda x: 0 if type(x) == float els
 #--------------------------------FEATURE SELECTION----------------------------#
 drop_features = ['PassengerId', 'Name', 'Ticket', 'Cabin','AgeBin', 'AgeBin*Pclass','FareBin']
 data_df = data_df.drop(drop_features, axis = 1)
-print data_df
+#print data_df
+
+
+#---------------------LABEL ENCODING BEGINS-----------------------#
+#Here we are excluding numbers since they need no labelling.Other that that, we are labelling all categories
+cols = data_df.select_dtypes(exclude = [np.number]).columns.values
+#Checking categorical and numerical columns
+#print "Categorical columns : " , data_df.select_dtypes(exclude = [np.number]).columns.values.shape[0]
+#print "Numerical columns : " ,	data_df.select_dtypes(include = [np.number]).columns.values.shape[0]
+
+#print "Without label alottment : ", data_df.columns.values
+data_df = pd.get_dummies(data_df)
+#Since only title and embarked columns were categorical, it breaks those down into multiple columns
+#print "After laebl alottment : " , data_df.columns.values
+#print data_df.shape
+
+#print data_df.isnull().sum()
+#print data_df.#head()
+
