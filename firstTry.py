@@ -223,3 +223,8 @@ data_df = pd.get_dummies(data_df)
 #print data_df.isnull().sum()
 #print data_df.#head()
 
+colormap = plt.cm.RdBu
+plt.figure(figsize = (20,20)) #figsize indicates width and height while plt.figure creates a new figure
+plt.title('Pearson correlation of Features for Train Set')
+sns.heatmap(data_df.astype(float).corr(),cmap = colormap, annot = True, square = False, vmax=1.0, linewidth = 0.1, linecolor = 'white')
+plt.show()
