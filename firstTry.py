@@ -1,7 +1,10 @@
+#-------------tiwansh's code--------------
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import sklearn.preprocessing
 
 
 train_df = pd.read_csv('train.csv')
@@ -64,7 +67,7 @@ data_df['Embarked'] = data_df['Embarked'].fillna(freq_port)
 #Analysing the filled column
 #print data_df[['Embarked', 'Survived']].groupby(['Embarked'], as_index = False).mean().sort_values(by= 'Survived', ascending= 'False')
 
-#C--------------ompletemissing entries of Age on the basis of Sex and Pclass---------#
+#--------------complete missing entries of Age on the basis of Sex and Pclass---------#
 #finding how many entries of Age are null
 
 #print data_df.Age.isnull().values.sum() #263 null entries
@@ -223,8 +226,49 @@ data_df = pd.get_dummies(data_df)
 #print data_df.isnull().sum()
 #print data_df.#head()
 
-colormap = plt.cm.RdBu
-plt.figure(figsize = (20,20)) #figsize indicates width and height while plt.figure creates a new figure
-plt.title('Pearson correlation of Features for Train Set')
-sns.heatmap(data_df.astype(float).corr(),cmap = colormap, annot = True, square = False, vmax=1.0, linewidth = 0.1, linecolor = 'white')
-plt.show()
+
+#------------------------------##########IMPORTANT#######-----------------------------------#
+#-------------------Viewing the Pearson Correlation all the features with one another-------#
+#colormap = plt.cm.RdBu
+#plt.figure(figsize = (20,20)) #figsize indicates width and height while plt.figure creates a new figure
+#plt.title('Pearson correlation of Features for Train Set')
+#sns.heatmap(data_df.astype(float).corr(),cmap = colormap, annot = True, square = False, vmax=1.0, linewidth = 0.1, linecolor = 'white')
+#plt.show()
+
+#-------------------------------######## MODEL TRAININIG STARTS #######--------------------#
+
+
+#print data_df['Survived'].isnull().sum()
+
+# A function to normalize data #
+def normalize_data(data):
+	rs = sklearn.preprocessing.RobustScaler()
+	rs.fit(data)
+	data_new = rs.transform(data)
+	return data_new
+
+
+#Split the training dataset into Survived feature(y) and rest of the features(X1, X2, X3 -------)
+X_train_valid = data_df.drop(['Survived'], axis = 1)[:train_df.shape[0]].copy().values
+Y_train_valid = data_df['Survived'][:train_df.shape[0]].copy().values.reshape(-1,)
+X_test = data_df.drop(['Survived'], axis = 1)[train_df.shape[0]:].copy().values
+
+#print X_train_valid
+#print Y_train_valid
+#print X_test
+
+#Creating a new dataframe with the list of all the features names and column name as features
+features_df = pd.DataFrame(data_df.drop(['Survived']).columns)
+features_df.columns = ['Features']
+#print features_df
+
+#Now normalize the training and test dataset
+X_train_valid = normalize_data(X_train_valid)
+X_test = normalize_data(X_test)
+
+#print X_train_valid.shape
+#print Y_train_valid.shape
+#print X_test.shape
+
+#########################        NEURAL NETWORK IMPLEMENTATIOM         #####################
+
