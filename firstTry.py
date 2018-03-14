@@ -248,6 +248,16 @@ def normalize_data(data):
 	return data_new
 
 
+#Calculating accuracy -> TO READ
+def accuracy(y_target, y_pred):
+	y_target_class = get_classes(y_pred).reshape(-1,)
+	y_pred = get_classes(y_pred).reshape(-1,)
+	return np.mean(y_targer_class == y_pred)
+
+#get classes from probabilities -> TO READ
+def get_classes:
+	return np.greater(y_proba, 0.5).astype(np.int)
+
 #Split the training dataset into Survived feature(y) and rest of the features(X1, X2, X3 -------)
 X_train_valid = data_df.drop(['Survived'], axis = 1)[:train_df.shape[0]].copy().values
 Y_train_valid = data_df['Survived'][:train_df.shape[0]].copy().values.reshape(-1,)
@@ -272,3 +282,17 @@ X_test = normalize_data(X_test)
 
 #########################        NEURAL NETWORK IMPLEMENTATIOM         #####################
 
+
+#Parameters defined for batch function
+perm_array_train = np.array([])
+index_in_epoch = 0
+
+def next_batch(batch_size, x_train, y_train):
+	global index_in_epoch, perm_array_train
+
+	start = index_in_epoch
+	index_in_epoch += batch_size
+
+	if not len(perm_array_train) == len(x_train):
+		perm_array_train = np.arrange(len(x_train))
+		
