@@ -295,4 +295,31 @@ def next_batch(batch_size, x_train, y_train):
 
 	if not len(perm_array_train) == len(x_train):
 		perm_array_train = np.arrange(len(x_train))
+
+	if index_in_epoch > x_train.shape[0]:
+		np.random.shuffle(perm_array_train) #shuffle data
+		start = 0 #start next epoch
+		index_in_epoch = batch_size
+
+	end = index_in_epoch
+
+	x_tr = x_train[perm_array_train[start:end]]
+	y_tr = y_train[perm_array_train[start:end]].reshape(-1,1)
+
+	return x_tr, y_tr
+
+#A function that creates neural network graph
+def create_nn_graph(num_input_features = 10, num_output_features = 1):
+	#reset default graph
+	tf.reset_default_graph()
+
+	x_size = num_input_features #number of features
+	y_size = num_output_features #
+	n_n_fc1 = 1024
+	n_n_fc2 = 1024
+
+	x_data = tf.placeholder('float', shape = [None,x_size])
+	y_data = tf.placeholder('float', shape = [None,y_size])
+
+	W_fc1 = tf.Variable
 		
