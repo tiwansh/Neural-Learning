@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import sklearn.preprocessing
-
+import tensorflow as tf
 
 train_df = pd.read_csv('train.csv')
 test_df = pd.read_csv('test.csv')
@@ -252,10 +252,10 @@ def normalize_data(data):
 def accuracy(y_target, y_pred):
 	y_target_class = get_classes(y_pred).reshape(-1,)
 	y_pred = get_classes(y_pred).reshape(-1,)
-	return np.mean(y_targer_class == y_pred)
+	return np.mean(y_target_class == y_pred)
 
 #get classes from probabilities -> TO READ
-def get_classes:
+def get_classes(y_proba):
 	return np.greater(y_proba, 0.5).astype(np.int)
 
 #Split the training dataset into Survived feature(y) and rest of the features(X1, X2, X3 -------)
@@ -310,7 +310,7 @@ def next_batch(batch_size, x_train, y_train):
 
 #A function that creates neural network graph
 def create_nn_graph(num_input_features = 10, num_output_features = 1):
-	#reset default graph
+	#reset default graph -> resets global default graph
 	tf.reset_default_graph()
 
 	x_size = num_input_features #number of features
@@ -322,4 +322,4 @@ def create_nn_graph(num_input_features = 10, num_output_features = 1):
 	y_data = tf.placeholder('float', shape = [None,y_size])
 
 	W_fc1 = tf.Variable
-		
+	
